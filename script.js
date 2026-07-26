@@ -8,7 +8,7 @@ const Gameboard = (function Gameboard (){
         for(let i = 0; i < row; i++){
             gameboard[i] = [];
             for(let j = 0; j < column; j++){
-                gameboard[i][j] = "";
+                gameboard[i][j] = " ";
             }
         }
 
@@ -18,23 +18,70 @@ const Gameboard = (function Gameboard (){
 
 const Game = initGame();
 
-printBoard();
-Game.playTurn(0,0);
-Game.playTurn(0,1);
-Game.playTurn(1,0);
-Game.playTurn(1,0);
+// printBoard();
+// Game.playTurn(0,0);
+// Game.playTurn(0,1);
+// Game.playTurn(0,2);
+// Game.playTurn(1,0);
+// Game.playTurn(2,0);
+// Game.playTurn(2,2);
+// Game.playTurn(2,1);
+// Game.playTurn(1,1);
+// Game.playTurn(1,2);
 
+
+console.log(Game.gameObj.count);
 
 // Functions -------------- - ------------------/
 
 function printBoard(){
-    console.table(Gameboard.gameboard);
+    Gameboard.gameboard.forEach(row=>{
+        console.log(row);
+    });
+    isGameOver();
 };
+
+
+// Game win or Draw condition
+
+function isGameOver(){
+    if(Game.gameObj.count >= 9){
+        console.log(`
+--------------------------
+Game Over!! It's a Draw
+-------------------------- 
+            `);
+            return;
+    }   
+    console.log(`
+-------------------------
+${Game.gameObj.activePlayer.name} plays next
+-------------------------
+                `);
+};
+
+
+// Reset game
+
+function resetGame(){
+    Game.gameObj.activePlayer = Game.players.player1;
+    Game.gameObj.count = 0;
+    Gameboard.gameboard.forEach(row=>{
+        [row[0], row[1], row[2]] = [" ", " ", " "];
+    });
+    printBoard();
+    
+};
+
+
+
+
+
 
 // Game controller --------------------------
 
 function initGame(player1Name = "Player1", player2Name = "Player2"){
-    
+
     const players = {
             player1: {
                 token: "X",
@@ -49,6 +96,7 @@ function initGame(player1Name = "Player1", player2Name = "Player2"){
     // Store Game Data
     const gameObj = {
         activePlayer: players.player1,
+        count: 0,
     };  
     
     const player1Slot = token(players.player1);
@@ -66,25 +114,44 @@ function initGame(player1Name = "Player1", player2Name = "Player2"){
 
         if(gameObj.activePlayer === players.player1){
 
+            if(player1Slot(row, column) !== undefined){
+                console.log(player1Slot(row,column));
+                return;
+            };
+
             player1Slot(row, column);
             toggleActivePlayer();
+            gameObj.count++;
             printBoard();
         }else{
 
+            if(player2Slot(row, column) !== undefined){
+                console.log(player2Slot(row, column));
+                return;
+            };
+
             player2Slot(row, column);
             toggleActivePlayer();
+            gameObj.count++;
             printBoard();
-        }
+        };
     };
 
     function token(player){
         const token = player.token;
-       return function selectSlot(row, column){
+        return function selectSlot(row, column){
 
-            if(Gameboard.gameboard[row][column] !== ""){
-                return "Please select an empty Slot";
+            if(Gameboard.gameboard[row][column] !== " "){
+                return `
+---------------------------------
+Please select an empty Slot
+---------------------------------
+---------------------------------
+${gameObj.activePlayer.name} plays next
+---------------------------------
+                `;
             }
-            return Gameboard.gameboard[row][column] = token;
+            Gameboard.gameboard[row][column] = token;
         };
     };
 
