@@ -18,19 +18,6 @@ const Gameboard = (function Gameboard (){
 
 const Game = initGame();
 
-// printBoard();
-// Game.playTurn(0,0);
-// Game.playTurn(0,1);
-// Game.playTurn(0,2);
-// Game.playTurn(1,0);
-// Game.playTurn(2,0);
-// Game.playTurn(2,2);
-// Game.playTurn(2,1);
-// Game.playTurn(1,1);
-// Game.playTurn(1,2);
-
-
-console.log(Game.gameObj.count);
 
 // Functions -------------- - ------------------/
 
@@ -38,21 +25,34 @@ function printBoard(){
     Gameboard.gameboard.forEach(row=>{
         console.log(row);
     });
-    isGameOver();
+
 };
+
 
 
 // Game win or Draw condition
 
 function isGameOver(){
-    if(Game.gameObj.count >= 9){
+
+    if(checkWin() === true){
+console.log(`
+--------------------------
+Game Over!! ${Game.gameObj.activePlayer.name} Wins!!
+-------------------------- 
+            `);
+        resetGame();
+        return;
+
+    }else if(Game.gameObj.count >= 9){
         console.log(`
 --------------------------
 Game Over!! It's a Draw
 -------------------------- 
             `);
+            resetGame();
             return;
-    }   
+    }
+
     console.log(`
 -------------------------
 ${Game.gameObj.activePlayer.name} plays next
@@ -60,6 +60,49 @@ ${Game.gameObj.activePlayer.name} plays next
                 `);
 };
 
+//Check winning condition
+
+function checkWin(){
+if(rowCheck()){
+    return true;
+}else if(diagCheck()){
+    return true;
+}else if(colCheck()){
+    return true;
+}else{
+    return false;
+}
+
+};
+
+function rowCheck(){
+    return Gameboard.gameboard.some(row=>{
+        return row[0] === row[1] && row[1] === row[2] && row[0] !== " ";
+});
+};
+
+function colCheck(){
+    const board = Gameboard.gameboard;
+    if(board[1][1] === " " || board[1][0] === " " || board[1][2] === " "){
+        return false;
+    }
+
+    return board[0][0] === board[1][0] && board[1][0] === board[2][0] ? 
+            true : board[0][1] === board[1][1] && board[1][1] === board[2][1] ? 
+                true : board[0][2] === board[1][2] && board[1][2] === board[2][2] ? 
+                    true : false;
+}
+
+function diagCheck(){
+    const board = Gameboard.gameboard;
+    if(board[1][1] === " "){
+        return false;
+    }
+
+    return board[0][0] === board[1][1] && board[1][1] === board[2][2] ? 
+        true : board[0][2] === board[1][1] && board[1][1] === board[2][0] ? 
+            true : false;
+}
 
 // Reset game
 
@@ -69,8 +112,6 @@ function resetGame(){
     Gameboard.gameboard.forEach(row=>{
         [row[0], row[1], row[2]] = [" ", " ", " "];
     });
-    printBoard();
-    
 };
 
 
@@ -78,7 +119,7 @@ function resetGame(){
 
 
 
-// Game controller --------------------------
+// Game
 
 function initGame(player1Name = "Player1", player2Name = "Player2"){
 
@@ -120,9 +161,10 @@ function initGame(player1Name = "Player1", player2Name = "Player2"){
             };
 
             player1Slot(row, column);
-            toggleActivePlayer();
             gameObj.count++;
             printBoard();
+            isGameOver();
+            toggleActivePlayer();
         }else{
 
             if(player2Slot(row, column) !== undefined){
@@ -131,9 +173,10 @@ function initGame(player1Name = "Player1", player2Name = "Player2"){
             };
 
             player2Slot(row, column);
-            toggleActivePlayer();
             gameObj.count++;
             printBoard();
+            isGameOver();
+            toggleActivePlayer();
         };
     };
 
@@ -156,6 +199,23 @@ ${gameObj.activePlayer.name} plays next
     };
 
     return {gameObj, players, toggleActivePlayer, playTurn};
-}
+};
 
+
+
+
+
+
+
+// printBoard();
+// Game.playTurn(0,0);
+// Game.playTurn(1,0);
+// Game.playTurn(0,1);
+// Game.playTurn(2,0);
+// Game.playTurn(0,2);
+
+// Game.playTurn(2,2);
+// Game.playTurn(2,1);
+// Game.playTurn(1,1);
+// Game.playTurn(1,2);
 
