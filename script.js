@@ -162,15 +162,15 @@ function rowCheck(){
 
 function colCheck(){
     const board = Gameboard.gameboard;
-    if(board[1][1] === " " || board[1][0] === " " || board[1][2] === " "){
-        return false;
-    }
 
-    return board[0][0] === board[1][0] && board[1][0] === board[2][0] ? 
-            true : board[0][1] === board[1][1] && board[1][1] === board[2][1] ? 
-                true : board[0][2] === board[1][2] && board[1][2] === board[2][2] ? 
-                    true : false;
-}
+    return [0,1,2].some(col=>{
+        return (
+            board[0][col] !== " "
+            && board[0][col] === board[1][col]
+            && board[1][col] === board[2][col] 
+        )
+    });
+};
 
 function diagCheck(){
     const board = Gameboard.gameboard;
@@ -214,17 +214,4 @@ ${Game.gameObj.activePlayer.name} Starts the Game!!
 };
 
 
-
-
-// printBoard();
-// Game.playTurn(0,0);
-// Game.playTurn(1,0);
-// Game.playTurn(0,1);
-// Game.playTurn(2,0);
-// Game.playTurn(0,2);
-
-// Game.playTurn(2,2);
-// Game.playTurn(2,1);
-// Game.playTurn(1,1);
-// Game.playTurn(1,2);
 
