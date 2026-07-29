@@ -121,6 +121,10 @@ Game Over!! ${Game.gameObj.activePlayer.name} Wins!!
 Game Over!! It's a Draw
 -------------------------- 
             `);
+            Game.gameObj.winner = {
+                name: "none", 
+                token: Game.gameObj.activePlayer.token
+            };
             resetGame();
             return;
 
@@ -234,7 +238,12 @@ const domObj = (function(){
 
     
     playGame.addEventListener("click", e=>{
+
+        //Clear display
+        document.body.textContent = "";
         container.textContent = "";
+
+        document.body.appendChild(playGame);
         addSlots();
         createBoard();
 
@@ -278,35 +287,54 @@ const domObj = (function(){
         
     };
 
-    
-    function addEvent(e){
-        const row = e.target.dataset.row;
-        const col = e.target.dataset.col;
-        
-        Game.playTurn(row, col);
-        e.target.textContent = Game.gameObj.winner.token || Gameboard.gameboard[row][col];
-        if(Game.gameObj.winner !== ""){
-
-            //Paragraph for announcing winner
+    function announceWinner(){
+        //Paragraph for announcing winner
             const winnerAnnounce = document.createElement("p");
             winnerAnnounce.setAttribute("id", "winner-result");
             winnerAnnounce.textContent = `Game Over!! ${Game.gameObj.winner.name} Wins!!`;
 
             document.body.appendChild(winnerAnnounce);
 
-            //Resets winner and removes click event
-            Game.gameObj.winner = "";
-            container.removeEventListener("click", addEvent);
-        }
+    };
+    
+    function announceDraw(){
+       //Paragraph for announcing draw
+            const drawAnnounce = document.createElement("p");
+            drawAnnounce.setAttribute("id", "draw-result");
+            drawAnnounce.textContent = `Game Over!! It's a Draw!!`;
 
+            document.body.appendChild(drawAnnounce); 
+    }
+
+    function addEvent(e){
+        const row = e.target.dataset.row;
+        const col = e.target.dataset.col;
         
+        Game.playTurn(row, col);
+        e.target.textContent = Game.gameObj.winner.token || Gameboard.gameboard[row][col] ;
+
+        if(Game.gameObj.winner !== ""){
+
+            if(Game.gameObj.winner.name !== "none"){
+
+                announceWinner();
+    
+                //Resets winner and removes click event
+                Game.gameObj.winner = "";
+                container.removeEventListener("click", addEvent);
+                playGame.textContent = "Play Again";
+
+            }else{
+                announceDraw();
+    
+                //Resets winner and removes click event
+                Game.gameObj.winner = "";
+                container.removeEventListener("click", addEvent);
+                playGame.textContent = "Play Again";
+
+            };
+        };
+
     };
 })();
 
-
-
-//Last content doesnt show when game ends
-//Reset board when game ends
-
-//might wanna check isGameOver for gameObj winner
-//function addEvent() might wanna watch
