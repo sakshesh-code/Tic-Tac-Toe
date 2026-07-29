@@ -33,6 +33,7 @@ const Game = (function (player1Name = "Player1", player2Name = "Player2"){
     const gameObj = {
         activePlayer: players.player1,
         count: 0,
+        winner: ""
     };  
     
     const player1Slot = token(players.player1);
@@ -108,6 +109,9 @@ console.log(`
 Game Over!! ${Game.gameObj.activePlayer.name} Wins!!
 -------------------------- 
             `);
+
+            //------------
+        Game.gameObj.winner = Game.gameObj.activePlayer;
         resetGame();
         return;
 
@@ -215,3 +219,94 @@ ${Game.gameObj.activePlayer.name} Starts the Game!!
 
 
 
+
+
+
+
+// DOM
+
+const domObj = (function(){
+
+    const container = document.createElement("div");
+    container.classList.add("container");
+
+    const playGame = document.querySelector("#play-game");
+
+    
+    playGame.addEventListener("click", e=>{
+        container.textContent = "";
+        addSlots();
+        createBoard();
+
+        //Click event for slots in container
+        container.addEventListener("click", addEvent);
+    })
+
+
+    //Functions
+    function createBoard(){
+        document.body.appendChild(container);
+    };
+
+    //Need a refresh board function
+
+    function addSlots(){
+
+        //row count here
+        let rowCount = 0;
+        //Add divs for rows and columns
+        Gameboard.gameboard.forEach(row=>{
+            //col count here
+            let colCount = 0;
+
+        row.forEach(item=>{
+            const slot = document.createElement("div");
+
+            //Connects slots to gameboard array
+            slot.dataset.row = rowCount;
+            slot.dataset.col = colCount;
+
+            container.appendChild(slot);
+
+            //col increment
+            colCount++;
+            });
+
+            //row increment
+            rowCount++;
+        });
+        
+    };
+
+    
+    function addEvent(e){
+        const row = e.target.dataset.row;
+        const col = e.target.dataset.col;
+        
+        Game.playTurn(row, col);
+        e.target.textContent = Game.gameObj.winner.token || Gameboard.gameboard[row][col];
+        if(Game.gameObj.winner !== ""){
+
+            //Paragraph for announcing winner
+            const winnerAnnounce = document.createElement("p");
+            winnerAnnounce.setAttribute("id", "winner-result");
+            winnerAnnounce.textContent = `Game Over!! ${Game.gameObj.winner.name} Wins!!`;
+
+            document.body.appendChild(winnerAnnounce);
+
+            //Resets winner and removes click event
+            Game.gameObj.winner = "";
+            container.removeEventListener("click", addEvent);
+        }
+
+        
+    };
+})();
+
+
+
+//Last content doesnt show when game ends
+//Reset board when game ends
+
+//might wanna check isGameOver for gameObj winner
+//function addEvent() might wanna watch
