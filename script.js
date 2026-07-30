@@ -235,20 +235,27 @@ const domObj = (function(){
     container.classList.add("container");
 
     const playGame = document.querySelector("#play-game");
+ 
+    playGame.addEventListener("click", play);
 
-    
-    playGame.addEventListener("click", e=>{
+    //Submit PLayer Names
+    const submitBtn = document.querySelector("#submit-btn");
+    const dialog = document.querySelector("dialog");
 
-        //Clear display
-        document.body.textContent = "";
-        container.textContent = "";
+    submitBtn.addEventListener("click", e=>{
+        e.preventDefault();
+        playGame.removeAttribute("hidden");
+        dialog.close();
 
-        document.body.appendChild(playGame);
-        addSlots();
-        createBoard();
+        Game.players.player1.name = player1.value.trim() || "Player1";
+        Game.players.player2.name = player2.value.trim() || "Player2";
 
-        //Click event for slots in container
-        container.addEventListener("click", addEvent);
+        player1.value = "";
+        player2.value = "";
+
+        play();
+
+        playGame.textContent = "Play Again";
     })
 
 
@@ -257,7 +264,6 @@ const domObj = (function(){
         document.body.appendChild(container);
     };
 
-    //Need a refresh board function
 
     function addSlots(){
 
@@ -336,5 +342,20 @@ const domObj = (function(){
         };
 
     };
+
+    function play(){
+        //Clear display
+        document.body.textContent = "";
+        container.textContent = "";
+
+        document.body.appendChild(playGame);
+        addSlots();
+        createBoard();
+
+
+        //Click event for slots in container
+        container.removeEventListener("click", addEvent);
+        container.addEventListener("click", addEvent);
+    }
 })();
 

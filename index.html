@@ -8,6 +8,36 @@
     <script src="./script.js" defer></script>
 </head>
 <body>
-    <button id="play-game">Play Game</button>
+    <button class="start-game" command="show-modal" commandfor="pick-name">
+        StartGame
+    </button>
+    <button id="play-game" hidden>Play Game</button>
+
+    <dialog id="pick-name">
+        <form action="" method="get">
+
+            <fieldset>
+
+            <legend>
+                Please enter a name for player1 and player2
+            </legend>
+
+            <label for="player1">
+                <input type="text" id="player1" name="player1Name" placeholder="player1">
+            </label>
+
+            <label for="player2">
+                <input type="text" id="player2" name="player2Name" placeholder="player2">
+            </label>
+
+            <button type="submit" id="submit-btn">Done</button>
+        </fieldset>
+        </form>
+
+        <button class="close" commandfor="pick-name" command="close">
+            X
+        </button>
+
+    </dialog>
 </body>
 </html>
