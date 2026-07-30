@@ -194,7 +194,7 @@ function diagCheck(){
 // Reset game
 
 function resetGame(){
-    Game.gameObj.activePlayer = Game.players.player1;
+
     Game.gameObj.count = 0;
     Gameboard.gameboard.forEach(row=>{
         [row[0], row[1], row[2]] = [" ", " ", " "];
@@ -298,6 +298,8 @@ const domObj = (function(){
             const winnerAnnounce = document.createElement("p");
             winnerAnnounce.setAttribute("id", "winner-result");
             winnerAnnounce.textContent = `Game Over!! ${Game.gameObj.winner.name} Wins!!`;
+            winnerAnnounce.style.fontSize = "3rem";
+            winnerAnnounce.style.alignSelf = "center";
 
             document.body.appendChild(winnerAnnounce);
 
@@ -308,6 +310,8 @@ const domObj = (function(){
             const drawAnnounce = document.createElement("p");
             drawAnnounce.setAttribute("id", "draw-result");
             drawAnnounce.textContent = `Game Over!! It's a Draw!!`;
+            drawAnnounce.style.fontSize = "3rem";
+            drawAnnounce.style.alignSelf = "center";
 
             document.body.appendChild(drawAnnounce); 
     }
